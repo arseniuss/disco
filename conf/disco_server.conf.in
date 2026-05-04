@@ -1,0 +1,7 @@
+#
+# Disco server configuration template
+#
+
+media {
+    music = "@MUSIC_DIR@"
+}
