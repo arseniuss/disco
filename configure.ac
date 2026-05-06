@@ -103,7 +103,7 @@ AS_IF([test "$enable_server" = "yes" || test "$enable_kde_client" = "yes"], [
     # Check for build tools
     #
 
-    m4_include([m4/iwyu.m4])
+    m4_include([m4/ax_iwyu.m4])
     AX_IWYU([], [AC_MSG_WARN([IWYU not enabled or not found])])
 
     #
@@ -135,38 +135,54 @@ AS_IF([test "$enable_kde_client" = "yes"], [
 #
 
 AS_IF([test "$enable_server" = "yes"], [
+    #
+    # Header checkd
+    #
     AC_CHECK_HEADERS([getopt.h], [],
         [AC_MSG_ERROR([Required header not found])], [])
+
+    #
+    # Library checks
+    #
+
+    PKG_CHECK_MODULES([SQLITE], [sqlite3], [], [
+        AC_CHECK_HEADERS([sqlite3.h], [],
+            [AC_MSG_ERROR([sqlite3.h not found])])
+        AC_CHECK_LIB([sqlite3], [sqlite3_open],
+            [SQLITE_LIBS="-lsqlite3"],
+            [AC_MSG_ERROR([sqlite3 library not found])])
+        SQLITE_CFLAGS=""
+    ])
+
+    AC_SUBST([SQLITE_CFLAGS])
+    AC_SUBST([SQLITE_LIBS])
 
 
     #
     # Configuration
     #
     sysconf_dir_expanded=$(eval echo ${sysconfdir})
-    AC_DEFINE_UNQUOTED([SERVER_CONFIG_FILE], ["${sysconf_dir_expanded}/disco_server.conf"],
-        [Disco server configuration file])
+    localstate_dir_expanded=$(eval echo ${localstatedir})
+
+    AC_DEFINE_UNQUOTED([SERVER_CONFIG_FILE],
+        ["${sysconf_dir_expanded}/disco_server.conf"], [Disco server configuration file])
+    AC_DEFINE_UNQUOTED([SERVER_CONFIG_DIR],
+        ["${sysconf_dir_expanded}/disco/"], [Disco server configuration directory])
+
+    AC_DEFINE_UNQUOTED([SERVER_VAR_DIR],
+        ["${localstate_dir_expanded}"], [Disco server logging/local state directory])
+    AC_DEFINE_UNQUOTED([SERVER_LOG_FILE],
+        ["${localstate_dir_expanded}/disco_server.log"], [Disco server log file])
+    AC_DEFINE_UNQUOTED([SERVER_MEDIA_DATABASE],
+        ["${localstate_dir_expanded}/lib/disco_media.db"], [Disco server media database])
 
     #
     # Detect configuration
     #
 
-    AC_ARG_WITH([music-dir],
-        [AS_HELP_STRING([--with-music-dir=DIR],
-            [Music directory path [default=auto-detect]])],
-        [MUSIC_DIR="$withval"],
-        [MUSIC_DIR="auto"])
-
-    AS_IF([test "x$MUSIC_DIR" = "xauto"], [
-        AS_IF([test -f "$HOME/.config/user-dirs.dirs"], [
-            MUSIC_DIR=$(grep "XDG_MUSIC_DIR" "$HOME/.config/user-dirs.dirs" | cut -d '"' -f 2)
-        ])
-        AS_IF([test -z "$MUSIC_DIR"], [
-            MUSIC_DIR="$HOME/Music"
-        ])
-    ])
-
-    MUSIC_DIR=$(eval echo "$MUSIC_DIR")
-    AC_SUBST([MUSIC_DIR])
+    AX_XDG_DIR([music_dir], [XDG_MUSIC_DIR], [Music])
+    AX_XDG_DIR([pictures_dir], [XDG_PICTURES_DIR], [Pictures])
+    AX_XDG_DIR([videos_dir], [XDG_VIDEOS_DIR], [Videos])
 ])
 
 #

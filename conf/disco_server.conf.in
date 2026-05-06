@@ -4,4 +4,6 @@
 
 media {
     music = "@MUSIC_DIR@"
+    videos = "@VIDEOS_DIR@"
+    pictures = "@PICTURES_DIR@"
 }

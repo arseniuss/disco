@@ -56,6 +56,7 @@ void print_usage(const char *progname)
 int main(int argc, char *argv[], char *envp[])
 {
     char *config_file = SERVER_CONFIG_FILE;
+    char *log_file = SERVER_LOG_FILE;
 
     int opt;
 
@@ -79,8 +80,7 @@ int main(int argc, char *argv[], char *envp[])
     }
 
     dsc_proc_init(argc, argv, envp);
-
-    dsc_log_init("disco_server.log");
+    dsc_log_init(log_file);
 
     dsc_log_msg(DSC_LOG_INFO, "Starting Disco server ...");
 

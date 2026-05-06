@@ -76,8 +76,8 @@ static void init_subprocesses(void)
 
     subprocesses = g_ptr_array_new();
 
-    g_unix_signal_add(SIGTERM, signal_handler, GINT_TO_POINTER(SIGTERM));
-    g_unix_signal_add(SIGINT, signal_handler, GINT_TO_POINTER(SIGINT));
+    //g_unix_signal_add(SIGTERM, signal_handler, GINT_TO_POINTER(SIGTERM));
+    //g_unix_signal_add(SIGINT, signal_handler, GINT_TO_POINTER(SIGINT));
 }
 
 void dsc_proc_init(int argc, char *argv[], char *envp[])

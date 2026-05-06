@@ -1,5 +1,7 @@
 #!/bin/false
 
+ison() { [[ "$1" =~ ^[Yy]([Ee][Ss])?$|^1$|^[Tt]([Rr][Uu][Ee])?$|^[Oo][Nn]$ ]] }
+
 echo_sleep() {
     local timeout=$1
 

@@ -20,6 +20,7 @@
 #include "libdsc_log.h"
 
 #include <fcntl.h>
+#include <glib.h>
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -38,12 +39,19 @@ static FILE *log_file = NULL;
 
 int dsc_log_init(const char *filename)
 {
+    int ret = 0;
+
     pthread_mutex_lock(&log_mutex);
 
     if (log_initialized) {
         pthread_mutex_unlock(&log_mutex);
         return 0;
     }
+
+    char *dir = g_path_get_dirname(filename);
+
+    if (g_mkdir_with_parents(dir, 0755) != 0)
+        goto err0;
 
     if (!(log_filename = strdup(filename)))
         goto err0;
@@ -57,6 +65,7 @@ int dsc_log_init(const char *filename)
     setvbuf(log_file, NULL, _IOLBF, 0);
 
     log_initialized = 1;
+    g_free(dir);
 
     pthread_mutex_unlock(&log_mutex);
 
@@ -67,7 +76,9 @@ err1:
     free(log_filename);
     log_filename = NULL;
 err0:
+    g_free(dir);
     pthread_mutex_unlock(&log_mutex);
+
     return -1;
 }
 

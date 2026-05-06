@@ -24,13 +24,6 @@
 #   Automake conditionals:
 #     ENABLE_IWYU          True if IWYU is enabled
 #
-# LICENSE
-#
-#   Copyright (c) 2024 Your Name <your.email@example.com>
-#   Copying and distribution of this file, with or without modification,
-#   are permitted in any medium without royalty provided the copyright
-#   notice and this notice are preserved. This file is offered as-is,
-#   without any warranty.
 
 #serial 1
 

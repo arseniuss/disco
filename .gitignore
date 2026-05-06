@@ -39,6 +39,7 @@
 /test-results/
 autom4te.cache/
 build/
+conf*
 config.log
 config.status
 gradle/wrapper/gradle-wrapper.jar
