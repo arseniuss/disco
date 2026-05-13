@@ -17,23 +17,16 @@
  * along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "internal.h"
+
 #include "dscmedia.h"
+#include "libdsc_db.h"
 #include "libdsc_ipc.h"
 #include "libdsc_log.h"
 #include "libdsc_proc.h"
 
-#include <unistd.h>
 #include <glib.h>
-
-static gboolean print_filename(const char *file_path, const char *filename, gpointer user_data,
-                               GError **error)
-{
-    dsc_log_msg(DSC_LOG_INFO, "Filename %s", file_path);
-
-    return TRUE;
-}
-
-static void media_scan(void) {}
+#include <unistd.h>
 
 void media_manager_main(const ProcArgs *pargs)
 {
@@ -41,14 +34,23 @@ void media_manager_main(const ProcArgs *pargs)
 
     IPCServerContext *srv = NULL;
     GError *error = NULL;
+    DBConnection *media_db = NULL;
 
     dsc_log_msg(DSC_LOG_INFO, "Media manager process %d started", getpid());
 
     dsc_proc_title_set("disco_server/%s started", IPC_SERVICE_MEDIA_MANAGER);
 
-    if (!dsc_ipc_server_init(IPC_SERVICE_MEDIA_MANAGER, &srv, &error)) {
-        dsc_log_msg(DSC_LOG_CRIT, "failed to init %s service: %s", IPC_SERVICE_MEDIA_MANAGER,
+    if (!dsc_db_open_create(args->media_database_str, media_db_schema_create,
+                            &media_db, &error)) {
+        dsc_log_msg(DSC_LOG_CRIT, "failed to init database: %s",
                     error->message);
+        g_error_free(error);
+        g_abort();
+    }
+
+    if (!dsc_ipc_server_init(IPC_SERVICE_MEDIA_MANAGER, &srv, &error)) {
+        dsc_log_msg(DSC_LOG_CRIT, "failed to init %s service: %s",
+                    IPC_SERVICE_MEDIA_MANAGER, error->message);
         g_error_free(error);
         g_abort();
     }

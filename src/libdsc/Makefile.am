@@ -19,6 +19,7 @@
 noinst_LIBRARIES = libdsc.a
 
 libdsc_a_SOURCES = \
+    db.c \
     fs_tt.c \
     fs.c \
     internal.h \
@@ -26,10 +27,9 @@ libdsc_a_SOURCES = \
     ipc_msg.c \
     ipc_server.c \
     log.c \
-    proc.c \
-    str.c
+    proc.c
 
-libdsc_a_CFLAGS = $(GLIB_CFLAGS)
+libdsc_a_CFLAGS = $(GLIB_CFLAGS) $(SQLITE_CFLAGS)
 
 IWYU_FLAGS = $(GLIB_CFLAGS)
 

@@ -37,6 +37,7 @@
 /install-sh
 /missing
 /test-results/
+/var
 autom4te.cache/
 build/
 conf*

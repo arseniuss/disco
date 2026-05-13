@@ -1,0 +1,23 @@
+#
+# Media database template
+#
+TABLE   |artists|id
+COLUMN     |id     |identity
+COLUMN     |name   |text
+END
+
+TABLE   |albums |id
+COLUMN     |id         |identity
+COLUMN     |name       |text
+COLUMN     |artist_id  |id |     | artists | id
+COLUMN     |release_date   |date
+END
+
+TABLE   |tracks |id
+COLUMN     | id        |identity
+COLUMN     |title      |text
+COLUMN     |album_id   |int
+COLUMN     |duration   |int
+COLUMN     |track_no   |int
+COLUMN     |file_path  |text
+END

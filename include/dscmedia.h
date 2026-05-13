@@ -27,7 +27,11 @@
 #define IPC_MEDIA_SCAN_MSG_ID 1
 
 typedef struct {
+    const char *media_database_str;
+
     const char *music_path;
+    const char *videos_path;
+    const char *pictures_path;
 } MediaManagerArgs;
 
 void media_manager_main(const ProcArgs *args);

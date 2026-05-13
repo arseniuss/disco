@@ -19,6 +19,7 @@
 noinst_HEADERS = \
   disco_server.h \
   dscmedia.h \
+  libdsc_db.h \
   libdsc_fs.h \
   libdsc_ipc.h \
   libdsc_log.h \

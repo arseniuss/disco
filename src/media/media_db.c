@@ -17,27 +17,32 @@
  * along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "libdsccommon.h"
+#include "internal.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "libdsc_db.h"
 
-int vsappendf(char **str, const char *fmt, va_list args)
+extern const char *schema_setup_script;
+
+GQuark media_error_quark(void)
 {
-    int ret;
-    char buf[BUFSIZ];
-    size_t old_size = *str ? strlen(*str) : 0;
+    return g_quark_from_static_string("media-error");
+}
 
-    if ((ret = vsnprintf(buf, sizeof(buf), fmt, args)) < 0) {
-        return ret;
+gboolean media_db_schema_create(DBConnection *conn, gint64 version,
+                                GError **error)
+{
+    GError *local_error = NULL;
+
+    if (version == -1) {
+        if (!dsc_db_exec(conn, schema_setup_script, DB_EXEC_TRANSACTION,
+                         &local_error)) {
+            g_propagate_error(error, local_error);
+            return FALSE;
+        }
     }
 
-    char *new_str = realloc(*str, old_size + ret + 1);
+    
 
-    strcat(new_str, buf);
 
-    *str = new_str;
-
-    return old_size + ret + 1;
+    return TRUE;
 }

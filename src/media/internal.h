@@ -17,7 +17,13 @@
  * along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #ifndef __MEDIA__INTERNAL_H__
- #define __MEDIA__INTERNAL_H__
+#ifndef __MEDIA__INTERNAL_H__
+#define __MEDIA__INTERNAL_H__
 
- #endif /* __MEDIA__INTERNAL_H__ */
+#include "libdsc_db.h"
+
+#include <glib.h>
+
+gboolean media_db_schema_create(DBConnection *conn, gint64 version, GError **error);
+
+#endif /* __MEDIA__INTERNAL_H__ */

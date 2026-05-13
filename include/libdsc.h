@@ -17,18 +17,16 @@
  * along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __LIBDSC__COMMON_H__
-#define __LIBDSC__COMMON_H__
+#ifndef __LIBDSC_H__
+#define __LIBDSC_H__
 
-#include <stdarg.h>
-#include <unistd.h>
+#include <glib.h>
 
-typedef enum {
-    DC_MEDIA_SCANNER_PROC = 0,
+#define DSC_NULL2STR(str) (str == NULL ? "" : str)
 
-    DC_PROC_TYPE_COUNT
-} dc_process_type_t;
+static inline const char *gboolean_to_string(gboolean value)
+{
+    return value ? "true" : "false";
+}
 
-int vsappendf(char **str, const char *fmt, va_list args);
-
-#endif /* __LIBDSC__COMMON_H__ */
+#endif /* __LIBDSC_H__ */

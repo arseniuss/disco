@@ -19,27 +19,31 @@
 
 #include "disco_server.h"
 #include "internal.h"
+#include "libdsc.h"
 #include "libdsc_log.h"
-#include "libdsccommon.h"
 
 #include <assert.h>
 #include <confuse.h>
+#include <glib.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
-static int validate_paths(cfg_t *cfg, cfg_opt_t *opt, const char *value, void *result);
+static int validate_paths(cfg_t *cfg, cfg_opt_t *opt, const char *value,
+                          void *result);
 
-static cfg_opt_t media_opts[] = {CFG_STR_LIST_CB("music", NULL, CFGF_NONE, validate_paths),
-                                 CFG_END()};
+static cfg_opt_t media_opts[] = {
+    CFG_STR_LIST_CB("music", NULL, CFGF_NONE, validate_paths), CFG_END()};
 
-static cfg_opt_t cfg_opts[] = {CFG_SEC("media", media_opts, CFGF_NONE), CFG_END()};
+static cfg_opt_t cfg_opts[] = {CFG_SEC("media", media_opts, CFGF_NONE),
+                               CFG_END()};
 
-static char *config_err = NULL;
+static GString *config_err = NULL;
 
-static int validate_paths(cfg_t *cfg, cfg_opt_t *opt, const char *value, void *result)
+static int validate_paths(cfg_t *cfg, cfg_opt_t *opt, const char *value,
+                          void *result)
 {
     struct stat st;
 
@@ -60,17 +64,18 @@ static int validate_paths(cfg_t *cfg, cfg_opt_t *opt, const char *value, void *r
 
 static void config_errfunc(cfg_t *cfg, const char *fmt, va_list ap)
 {
-    vsappendf(&config_err, fmt, ap);
+    g_string_append_vprintf(config_err, fmt, ap);
 }
 
 static int config_check(cfg_t *cfg, cfg_opt_t *opts, const char *old_path,
                         const char *section_name);
 
-static int config_elem_check(cfg_t *cfg, cfg_opt_t *opt, const char *path, int index)
+static int config_elem_check(cfg_t *cfg, cfg_opt_t *opt, const char *path,
+                             int index)
 {
     int total_errors = 0;
 
-#define GET_ELEM(single, multi, index)                                                             \
+#define GET_ELEM(single, multi, index)                                         \
     (index < 0 ? single(cfg, opt->name) : multi(cfg, opt->name, index))
 
     switch (opt->type) {
@@ -112,7 +117,8 @@ static int config_elem_check(cfg_t *cfg, cfg_opt_t *opt, const char *path, int i
     return total_errors;
 }
 
-static int config_check(cfg_t *cfg, cfg_opt_t *opts, const char *old_path, const char *section_name)
+static int config_check(cfg_t *cfg, cfg_opt_t *opts, const char *old_path,
+                        const char *section_name)
 {
     DSC_TRACE_FUNC("%s %s", old_path, section_name);
 
@@ -148,6 +154,7 @@ cfg_t *config_init(const char *config_file)
     DSC_TRACE_FUNC("%s", config_file);
 
     cfg_t *cfg = cfg_init(cfg_opts, CFGF_NONE);
+    config_err = g_string_new("");
     cfg_set_error_function(cfg, config_errfunc);
 
     int ret = cfg_parse(cfg, config_file);
@@ -155,12 +162,12 @@ cfg_t *config_init(const char *config_file)
     if (ret != CFG_SUCCESS) {
         switch (ret) {
         case CFG_FILE_ERROR:
-            assert(config_err == NULL);
-            config_err = "file error";
+            g_string_printf(config_err, "file error");
+            break;
         case CFG_PARSE_ERROR:
         default:
-            dsc_log_msg(DSC_LOG_CRIT, "Failed to parse configuration:%s: %s", config_file,
-                        config_err);
+            dsc_log_msg(DSC_LOG_CRIT, "Failed to parse configuration:%s: %s",
+                        config_file, config_err->str);
             exit(DSC_EXIT_PARSEERR);
         }
     }

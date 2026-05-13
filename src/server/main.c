@@ -41,7 +41,11 @@ static void start_processes(cfg_t *cfg)
         exit(DSC_EXIT_PARSEERR);
     }
 
+    media_manager_args.media_database_str = SERVER_MEDIA_DATABASE;
+
     media_manager_args.music_path = cfg_getstr(media, "music");
+    media_manager_args.videos_path = cfg_getstr(media, "videos");
+    media_manager_args.pictures_path = cfg_getstr(media, "pictures");
 
     dsc_proc_start(&media_manager_main, &media_manager_args);
 }
