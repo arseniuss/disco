@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
 
+if BUILD_NATIVE_DEPS
+
+EXTRA_DIST = \
+  android-client
+
 SUBDIRS = \
     libdsc \
     media \
@@ -24,3 +29,5 @@ SUBDIRS = \
 if ENABLE_IWYU
   include $(top_srcdir)/iwyu.mk
 endif
+
+endif # BUILD_NATIVE_DEPS

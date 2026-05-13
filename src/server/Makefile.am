@@ -33,7 +33,7 @@ disco_server_LDADD = \
     $(top_builddir)/src/libdsc/libdsc.a \
     $(CONFUSE_LIBS) $(GLIB_LIBS) $(GIO_LIBS) $(SQLITE_LIBS)
 
-IWYU_FLAGS = $(GLIB_CFLAGS)
+AM_IWYU_FLAGS = $(GLIB_CFLAGS)
 
 if ENABLE_IWYU
   include $(top_srcdir)/iwyu.mk

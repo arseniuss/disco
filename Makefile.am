@@ -22,11 +22,19 @@ SUBDIRS = \
     src
 
 EXTRA_DIST = \
+    .clang-format \
+    .github/workflows/build.yml \
+    .gitignore \
+    bootstrap.sh \
     build.gradle \
-    settings.gradle \
     gradle.properties \
     gradle/wrapper/gradle-wrapper.jar \
-    gradle/wrapper/gradle-wrapper.properties
+    gradle/wrapper/gradle-wrapper.properties \
+    gradlew \
+    gradlew.bat \
+    iwyu.mk \
+    scripts \
+    settings.gradle
 
 if BUILD_NATIVE_DEPS
 
@@ -47,7 +55,8 @@ if BUILD_ANDROID_CLIENT
 all-local: android-build
 
 android-build:
-	$(GRADLE) assembleDebug
+	$(GRADLE) assembleDebug --warning-mode none --info \
+		$(GRADLE_FLAGS)
 
 android-clean:
 	$(GRADLE) clean
@@ -58,6 +67,9 @@ android-install:
 endif # BUILD_ANDROID_CLIENT
 
 #########################################################
+
+dist-hook:
+	rm -rf $(distdir)/src/android-client/build
 
 maintainer-check: license-check
 

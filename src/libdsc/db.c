@@ -17,13 +17,14 @@
  * along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "libdsc.h"
 #include "libdsc_db.h"
 #include "libdsc_log.h"
 
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <sqlite3.h>
 #include <stdarg.h>
+#include <stddef.h>
 
 #define GQUARCK_SQLITE_ERROR (sqlite_error_quark())
 

@@ -24,11 +24,12 @@ noinst_HEADERS = \
   libdsc_ipc.h \
   libdsc_log.h \
   libdsc_proc.h \
+  libdsc.h \
   libdsccommon.h
 
 iwyu_sources = $(noinst_HEADERS)
 
-IWYU_FLAGS = $(GLIB_CFLAGS)
+AM_IWYU_FLAGS = $(GLIB_CFLAGS)
 
 if ENABLE_IWYU
   include $(top_srcdir)/iwyu.mk

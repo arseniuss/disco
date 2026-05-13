@@ -22,7 +22,6 @@
 #include "libdsc.h"
 #include "libdsc_log.h"
 
-#include <assert.h>
 #include <confuse.h>
 #include <glib.h>
 #include <stdarg.h>

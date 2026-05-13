@@ -31,7 +31,7 @@ libdsc_a_SOURCES = \
 
 libdsc_a_CFLAGS = $(GLIB_CFLAGS) $(SQLITE_CFLAGS)
 
-IWYU_FLAGS = $(GLIB_CFLAGS)
+AM_IWYU_FLAGS = $(GLIB_CFLAGS)
 
 if ENABLE_IWYU
   include $(top_srcdir)/iwyu.mk

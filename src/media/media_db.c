@@ -21,6 +21,10 @@
 
 #include "libdsc_db.h"
 
+#include <glib.h>
+#include <glib/gtypes.h>
+#include <stddef.h>
+
 extern const char *schema_setup_script;
 
 GQuark media_error_quark(void)
@@ -41,7 +45,7 @@ gboolean media_db_schema_create(DBConnection *conn, gint64 version,
         }
     }
 
-    
+
 
 
     return TRUE;

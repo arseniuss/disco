@@ -21,6 +21,7 @@
 #define __LIBDSC__DB_H__
 
 #include <glib.h>
+#include <glib/gtypes.h>
 
 typedef enum {
     DB_COLUMN_IDENTITY = 0,

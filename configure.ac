@@ -63,6 +63,17 @@ AM_CONDITIONAL([BUILD_ANDROID_CLIENT], [test "$enable_android_client" = "yes"])
 
 AM_CONDITIONAL([BUILD_NATIVE_DEPS], [test "$enable_server" = "yes" || test "$enable_kde_client" = "yes"])
 
+AS_IF([test "$enable_server" != "yes" && test "$enable_kde_client" != "yes" && test "$enable_android_client" != "yes"], [
+    AC_MSG_ERROR([nothing to configure
+
+Enable at least one option:
+    --enable-kde-client       Build KDE client
+    --enable-server           Build server
+    --enable-android-client   Build Android client
+
+Run './configure --help' for all options.])
+]);
+
 #
 # General tests to build native programs
 #
@@ -92,19 +103,12 @@ AS_IF([test "$enable_server" = "yes" || test "$enable_kde_client" = "yes"], [
         AC_MSG_ERROR([libconfuse not found])
     ])
 
-    PKG_CHECK_MODULES([LIBEVENT], [libevent >= 2.0], [
-        AC_SUBST([LIBEVENT_CFLAGS])
-        AC_SUBST([LIBEVENT_LIBS])
-    ], [
-        AC_MSG_ERROR([libevent 2.0 or higher is required but was not found.])
-    ])
-
     #
     # Check for build tools
     #
 
     m4_include([m4/ax_iwyu.m4])
-    AX_IWYU([], [AC_MSG_WARN([IWYU not enabled or not found])])
+    AX_IWYU
 
     #
     # Check compiler
@@ -194,38 +198,36 @@ AS_IF([test "$enable_android_client" = "yes"], [
     # Check for programs
     #
 
-    AC_CHECK_PROGS([JAVA], [java], [no])
-    AC_CHECK_PROGS([JAVAC], [javac], [no])
+    AC_CHECK_PROGS([JAVA], [java])
+    AC_CHECK_PROGS([JAVAC], [javac])
 
-    AC_CHECK_PROGS([GRADLE], [gradle], [no])
-    AC_MSG_CHECKING([for local gradlew])
-    AS_IF([test -f "./gradlew"], [
-        GRADLE="./gradlew"
-        AC_MSG_RESULT([./gradlew])
-    ], [test "$GRADLE" != "no"], [
-        AC_MSG_RESULT([found system gradle])
-    ], [
-        AC_MSG_RESULT([no])
-        AC_MSG_ERROR([Gradle or gradlew required])
+    AC_CHECK_PROGS([GRADLE], [gradle])
+    AS_IF([test "x$GRADLE" = "x"], [
+        AC_MSG_CHECKING([for local gradlew])
+
+        AS_IF([test -f "./gradlew"], [
+            GRADLE="./gradlew"
+            AC_MSG_RESULT([./gradlew])
+        ], [test "x$GRADLE" != "x"], [
+            AC_MSG_RESULT([found system gradle])
+        ], [
+            AC_MSG_RESULT([no])
+            AC_MSG_ERROR([Gradle or gradlew required])
+        ])
     ])
+
     AC_SUBST([GRADLE])
-
-    AC_ARG_WITH([android-sdk],
-        [AS_HELP_STRING([--with-android-sdk=DIR], [Path to Android SDK])],
-        [ANDROID_SDK="$withval"],
-        [ANDROID_SDK="$HOME/Android/Sdk"])
-
     AC_SUBST([ANDROID_SDK])
 ])
 
 AC_CONFIG_FILES([
+ conf/disco_server.conf:conf/disco_server.conf.in
  include/Makefile
  Makefile
  src/libdsc/Makefile
- src/media/Makefile
  src/Makefile
+ src/media/Makefile
  src/server/Makefile
- conf/disco_server.conf:conf/disco_server.conf.in
 ])
 
 AC_OUTPUT

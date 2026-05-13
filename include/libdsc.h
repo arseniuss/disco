@@ -21,6 +21,7 @@
 #define __LIBDSC_H__
 
 #include <glib.h>
+#include <stddef.h>
 
 #define DSC_NULL2STR(str) (str == NULL ? "" : str)
 

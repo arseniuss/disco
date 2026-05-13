@@ -21,7 +21,6 @@
 #define __LIBDSC__COMMON_H__
 
 #include <stdarg.h>
-#include <unistd.h>
 
 typedef enum {
     DC_MEDIA_SCANNER_PROC = 0,

@@ -20,7 +20,6 @@
 #include "libdsc_log.h"
 #include "libdsc_proc.h"
 
-#include <glib-unix.h>
 #include <glib.h>
 #include <glib/gtypes.h>
 #include <signal.h>

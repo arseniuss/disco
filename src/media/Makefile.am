@@ -23,7 +23,7 @@ EXTRA_DIST = database.dbtmpl
 BUILT_SOURCES = media_db_scripts.c
 CLEANFILES = media_db_scripts.c
 
-.PHONY: media_db_scripts.c
+#.PHONY: media_db_scripts.c
 
 media_db_scripts.c: database.dbtmpl
 	$(SHELL) $(top_srcdir)/scripts/gen_db.sh -v -c $< $@
@@ -38,7 +38,7 @@ libdscmedia_a_DEPENDENCIES = media_db_scripts.c
 
 libdscmedia_a_CFLAGS = $(GLIB_CFLAGS)
 
-IWYU_FLAGS = $(GLIB_CFLAGS)
+AM_IWYU_FLAGS = $(GLIB_CFLAGS)
 if ENABLE_IWYU
   include $(top_srcdir)/iwyu.mk
 endif

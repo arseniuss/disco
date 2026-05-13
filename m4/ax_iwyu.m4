@@ -60,7 +60,7 @@ AC_DEFUN([AX_IWYU], [
         AC_CHECK_PROGS([IWYU], [include-what-you-use iwyu], [no])
 
         AS_IF([test "x$IWYU" = "xno"], [
-            AC_MSG_WARN([IWYU requested but not found])
+            AC_MSG_ERROR([IWYU requested but not found])
             ax_iwyu_enable=no
         ], [
              ax_iwyu_enable=yes

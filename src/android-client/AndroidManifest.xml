@@ -16,4 +16,4 @@
   You should have received a copy of the GNU Affero General Public License
   along with Disco project.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<manifest package="com.example.disco"/>
+<manifest package="lv.id.arseniuss.disco"/>

@@ -22,7 +22,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.disco'
+    namespace 'lv.id.arseniuss.disco'
     compileSdk 34
 
     defaultConfig {

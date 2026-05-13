@@ -43,9 +43,7 @@ build/
 conf*
 config.log
 config.status
-gradle/wrapper/gradle-wrapper.jar
-gradlew
-gradlew.bat
+disco-*.tar.gz
 include/config.h
 include/config.h.in
 local.properties
@@ -55,6 +53,7 @@ Makefile.in
 Makefile.in
 src/android-client/.cxx/
 src/android-client/build/
+src/media/media_db_scripts.c
 src/server/disco_server
 stamp-h*
 stamp-h1

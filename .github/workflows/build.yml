@@ -1,0 +1,48 @@
+name: do everything
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake \
+            libglib2.0-dev pkg-config libconfuse-dev libprotobuf-dev \
+            protobuf-compiler iwyu
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run bootstrap script
+        run: |
+          ./bootstrap.sh
+
+      - name: Configure
+        run: |
+            ./configure --enable-kde-client --enable-server \
+              --enable-android-client --enable-iwyu --enable-maintainer-mode
+
+      - name: Build
+        run: |
+          make GRADLE_FLAGS="--parallel --build-cache --no-daemon"
+
+      - name: Include What You Use run
+        run: |
+          make iwyu IWYU_FLAGS='-Xiwyu --error'
+
+      - name: Maintenance check
+        run: |
+          make maintainer-check
+
+      - name: Create dist and show tree
+        run: |
+          make dist
+          ./scripts/check_dist.sh
